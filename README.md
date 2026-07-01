@@ -38,23 +38,13 @@ O framework utiliza um modelo IDS baseado em **LightGBM** para obter as importâ
 
 Durante a calibração, apenas as variáveis realmente relevantes para o classificador são ajustadas.
 
-A otimização minimiza iterativamente a:
-
-**Distância de Wasserstein (W₁)**
-
-entre os dados reais e os dados sintéticos.
+A otimização minimiza iterativamente a **Distância de Wasserstein (W₁)** entre os dados reais e os dados sintéticos.
 
 ---
 
 ##  Injeção em Ambiente 5G Real
 
-Após calibrado, o tráfego é injetado diretamente na interface:
-
-```
-uesimtun0
-```
-
-do UERANSIM, atravessando toda a pilha do Open5GS.
+Após calibrado, o tráfego é injetado diretamente na interface: uesimtun0 do UERANSIM, atravessando toda a pilha do Open5GS.
 
 Para garantir precisão temporal na transmissão dos pacotes, o injetor utiliza:
 
