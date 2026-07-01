@@ -1,0 +1,13 @@
+# Dependencias do toolkit synthgen
+# Instale com:  pip install -r requirements.txt
+scapy>=2.5.0
+dpkt>=1.9.8
+numpy>=1.23
+pandas>=1.5
+scipy>=1.9
+scikit-learn>=1.2
+matplotlib>=3.6
+tqdm>=4.64
+optuna>=3.4
+# Opcional (projecao UMAP no stat_compare). Se nao instalar, o script ignora UMAP.
+umap-learn>=0.5

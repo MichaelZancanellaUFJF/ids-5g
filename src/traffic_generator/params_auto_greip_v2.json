@@ -1,0 +1,857 @@
+{
+  "_comment": "JSON v2 opcional: mantem defaults globais e permite overrides por variante em variants.*. Compatibilidade: params.json legado continua valido.",
+  "variant": "greip",
+  "seed": 42,
+  "capture_overhead": 14,
+  "botnet": {
+    "size": 10,
+    "src_base": "10.45.0.",
+    "src_first_octet": 20,
+    "dst_ip": "10.45.0.1"
+  },
+  "flow": {
+    "_comment": "Modelos aceitos: duration_model/packet_count_model = lognorm | normal | weibull | mixture | empirical_quantile | bootstrap.",
+    "packet_count_model": "normal",
+    "packets_mean": 8081,
+    "packets_std": 2000,
+    "packets_min": 100,
+    "duration_model": "lognorm",
+    "duration_lognorm_mu": 1.072,
+    "duration_lognorm_sigma": 0.7,
+    "duration_min": 0.1,
+    "duration_max": 30.0,
+    "duration_packets_correlation": 0.1
+  },
+  "size": {
+    "dist": "lognorm",
+    "mu": 6.304,
+    "sigma": 0.025,
+    "mu_std": 0.0,
+    "min": 400,
+    "max": 700,
+    "noisy_fraction": 0.0,
+    "noisy_mu": 700,
+    "noisy_sigma": 120
+  },
+  "iat": {
+    "model": "onoff",
+    "on_rate_pps": 2767.0,
+    "p_off": 0.03,
+    "off_weibull_k": 1.2,
+    "off_weibull_scale": 0.002,
+    "ar1_rho": 0.2,
+    "jitter": 0.05,
+    "hiccup_p": 0.02,
+    "hiccup_mult_lo": 2.0,
+    "hiccup_mult_hi": 5.0,
+    "burst_p": 0.1,
+    "burst_mult_lo": 0.01,
+    "burst_mult_hi": 0.1
+  },
+  "gre": {
+    "flag_weight_4": 0.25,
+    "flag_weight_8": 0.25,
+    "flag_weight_12": 0.5
+  },
+  "ttl": {
+    "dist": "normal",
+    "mean": 64.0,
+    "std": 0.0,
+    "min": 40,
+    "max": 255
+  },
+  "inter_flow_delay": 0.01,
+  "benign": {
+    "_comment": "Mistura de perfis inspirada no K-Means (~k=6). Se profiles for removido, o gerador usa o modelo benigno legado.",
+    "num_devices": 800,
+    "sim_duration": 60.0,
+    "dst_ip": "10.45.0.1",
+    "src_base_int": 20,
+    "dport": 5683,
+    "profiles": [
+      {
+        "name": "sensor_dominante",
+        "weight": 0.56,
+        "duration_model": "constant",
+        "duration_value": 60.0,
+        "interval_dist": "lognorm",
+        "mean_interval": 1.2,
+        "interval_sigma": 0.25,
+        "jitter": 0.08,
+        "payload_dist": "normal",
+        "payload_mean": 70.0,
+        "payload_std": 10.0,
+        "payload_min": 20,
+        "burst_p": 0.005,
+        "burst_size": 2
+      },
+      {
+        "name": "gateway_intermediario",
+        "weight": 0.32,
+        "duration_model": "constant",
+        "duration_value": 60.0,
+        "interval_dist": "lognorm",
+        "mean_interval": 0.45,
+        "interval_sigma": 0.35,
+        "jitter": 0.15,
+        "payload_dist": "normal",
+        "payload_mean": 120.0,
+        "payload_std": 25.0,
+        "payload_min": 30,
+        "burst_p": 0.03,
+        "burst_size": 4
+      },
+      {
+        "name": "alto_payload",
+        "weight": 0.07,
+        "duration_model": "lognorm",
+        "duration_lognorm_mu": 2.8,
+        "duration_lognorm_sigma": 0.6,
+        "interval_dist": "exponential",
+        "mean_interval": 2.5,
+        "jitter": 0.25,
+        "payload_dist": "normal",
+        "payload_mean": 520.0,
+        "payload_std": 90.0,
+        "payload_min": 80,
+        "burst_p": 0.04,
+        "burst_size": 3
+      },
+      {
+        "name": "eventos_raros",
+        "weight": 0.05,
+        "duration_model": "lognorm",
+        "duration_lognorm_mu": 2.0,
+        "duration_lognorm_sigma": 0.8,
+        "interval_dist": "exponential",
+        "mean_interval": 6.0,
+        "jitter": 0.4,
+        "payload_dist": "normal",
+        "payload_mean": 220.0,
+        "payload_std": 120.0,
+        "payload_min": 40,
+        "burst_p": 0.08,
+        "burst_size": 6
+      }
+    ]
+  },
+  "variants": {
+    "udpplain": {
+      "_comment": "Mirai UDP Plain: continuo sem zeros; GMM log10 captura assimetria e cauda longa melhor que LogNormal/Weibull.",
+      "flow": {
+        "duration_model": "gmm_log10",
+        "duration_epsilon": 1e-09,
+        "duration_components": [
+          {
+            "weight": 0.04253373743590529,
+            "mean_log10": -1.384949125973527,
+            "std_log10": 0.5745348593019555
+          },
+          {
+            "weight": 0.13770208275667561,
+            "mean_log10": -0.4918752765342671,
+            "std_log10": 0.29093840778355584
+          },
+          {
+            "weight": 0.27559419448245387,
+            "mean_log10": 0.055064240758155476,
+            "std_log10": 0.19565766784001476
+          },
+          {
+            "weight": 0.4809851697079075,
+            "mean_log10": 0.45856028431736134,
+            "std_log10": 0.15644304411366727
+          },
+          {
+            "weight": 0.0631848156170577,
+            "mean_log10": 0.8017836433591002,
+            "std_log10": 0.4155697517147379
+          }
+        ]
+      },
+      "size": {
+        "mu": 6.304,
+        "sigma": 0.025,
+        "noisy_fraction": 0.0
+      }
+    },
+    "greip": {
+      "_comment": "Mirai GRE-IP v2. Min empirico CIC (med~547); markov delta_above_floor como greeth v2; Cov/Var secundarios (modelo decide por Min).",
+      "capture_overhead": 14,
+      "size": {
+        "model": "hybrid_window_hetero",
+        "target_feature": "Min",
+        "floor_model": "empirical_quantile",
+        "floor_jitter_std": 0.0,
+        "floor_quantile_lo": 0.0,
+        "floor_quantile_hi": 0.95,
+        "floor_clip_min": 420,
+        "floor_clip_max": 578,
+        "min": 42,
+        "max": 2200,
+        "plateau_min_packets": 20,
+        "sigma": 0.05432752727284344,
+        "small_fraction": 0.041441155293291454,
+        "small_mu": 4.148956580438763,
+        "small_sigma": 0.28226067007561245,
+        "jitter_std": 0.32,
+        "noisy_fraction": 0.055640754941770815,
+        "mu": 6.402094049605575,
+        "components": [
+          {
+            "weight": 0.38,
+            "kind": "constant",
+            "value": 578
+          },
+          {
+            "weight": 0.52,
+            "kind": "normal",
+            "mean": 484,
+            "std": 44
+          },
+          {
+            "weight": 0.1,
+            "kind": "lognormal",
+            "mean_log": 5.65,
+            "std_log": 0.42
+          }
+        ],
+        "quantiles_empirical_min": [
+          [
+            0.0,
+            46.16
+          ],
+          [
+            0.05,
+            346.06
+          ],
+          [
+            0.1,
+            408.76
+          ],
+          [
+            0.25,
+            483.7
+          ],
+          [
+            0.4,
+            520.0
+          ],
+          [
+            0.5,
+            546.8
+          ],
+          [
+            0.6,
+            562.0
+          ],
+          [
+            0.75,
+            578.0
+          ],
+          [
+            0.9,
+            578.0
+          ],
+          [
+            0.95,
+            578.0
+          ],
+          [
+            0.99,
+            578.0
+          ],
+          [
+            1.0,
+            1457.72
+          ]
+        ]
+      },
+      "dynamic_streams": {
+        "enabled": true,
+        "block_size": 20,
+        "size_std": 58.0,
+        "size_correlation": 0.4,
+        "window_hetero": {
+          "pcap_intra_iat_mode": "uniform",
+          "pcap_intra_iat_low_sec": 0.0005,
+          "pcap_intra_iat_high_sec": 0.004,
+          "pcap_intra_iat_sec": 0.002,
+          "pcap_iat_cap_burst": false,
+          "inter_window_gap_sec": 0.002,
+          "inter_window_gap_cap_burst": false,
+          "flow_duration_include_inter_gap": false,
+          "plateau_homogeneous": true,
+          "plateau_homogeneous_floor_min": 576,
+          "plateau_homogeneous_size": 578,
+          "plateau_micro_jitter_sigma": 0.0,
+          "low_floor_profile": "one_min_ordered_spike",
+          "low_floor_spike_low": 640,
+          "low_floor_spike_mid": 614,
+          "low_floor_plateau_mid": 578,
+          "low_floor_mid_min": 540,
+          "low_floor_target_avg_low": 572.0,
+          "low_floor_apply_cov_regulation": true,
+          "low_floor_plateau_jitter_low": 14.0,
+          "low_floor_plateau_jitter_mid": 6.0,
+          "low_floor_plateau_jitter_hi": 3.0,
+          "min_trace": false,
+          "min_trace_samples": 12,
+          "size_std": 58.0,
+          "tot_sum_profile": "markov_gmm",
+          "intra_spread": {
+            "_comment": "v2 greip: spread moderado (herda greeth v2 auto_calibrate)",
+            "enabled": true,
+            "shuffle_packets": true,
+            "jitter_std": 39.5,
+            "spike_prob": 0.05953969625279606,
+            "spike_delta": 91.31207115226731,
+            "tier_switch_prob": 0.45,
+            "tier_jitter": 22.0,
+            "tiers": [
+              0,
+              40,
+              85,
+              145
+            ],
+            "tier_weights": [
+              0.28,
+              0.34,
+              0.26,
+              0.12
+            ],
+            "mid_floor_delta_scale": 1.18,
+            "low_floor_delta_scale": 0.85,
+            "role_deltas": {
+              "plateau": [
+                0,
+                38
+              ],
+              "normal": [
+                71,
+                151
+              ],
+              "tail": [
+                107,
+                196
+              ]
+            }
+          },
+          "markov_gmm": {
+            "_comment_states": "v6-L: multimodal intra-janela; emit_mode delta_above_floor",
+            "emit_mode": "delta_above_floor",
+            "state_labels": [
+              "578",
+              "478",
+              "tail"
+            ],
+            "plateau_prob": 0.32,
+            "normal_prob": 0.58,
+            "tail_prob": 0.1,
+            "plateau_emit_std_log": 0.055,
+            "normal_emit_std_mult": 1.35,
+            "tail_emit_std_mult": 1.25,
+            "tail_stay_prob": 0.22,
+            "tail_scale": 1.05,
+            "stay_prob": 0.36,
+            "asymmetric": true,
+            "transition": [
+              [
+                0.3,
+                0.4,
+                0.3
+              ],
+              [
+                0.26,
+                0.36,
+                0.38
+              ],
+              [
+                0.2,
+                0.44,
+                0.36
+              ]
+            ],
+            "stay_probs": [
+              0.3,
+              0.36,
+              0.36
+            ],
+            "ar1_rho": 0.08,
+            "spike_prob": 0.05953969625279606,
+            "spike_delta": 91.31207115226731,
+            "jitter_std": 36.0
+          },
+          "burst_model": {
+            "enabled": true,
+            "probability": 0.03,
+            "packets_per_burst": 2,
+            "burst_mean": 628,
+            "burst_std": 18
+          },
+          "cov_regulation": {
+            "_comment": "v2 greip: alvo Cov CIC ~1003; Variance via cic_greip_min_std",
+            "enabled": true,
+            "cov_target": 1002.596,
+            "cov_expand_max": 2.5,
+            "variance_agg_mode": "cic_greip_min_std"
+          },
+          "var_model_regulation": {
+            "enabled": false
+          },
+          "long_flow_fraction": 0.21999999999999997,
+          "long_flow_reset_after_packets": 318,
+          "long_flow_reset_prob": 1.0,
+          "operational_modes": {
+            "enabled": false,
+            "initial_mode": "plateau"
+          }
+        }
+      },
+      "flow": {
+        "duration_model": "zero_inflated_gmm_log10",
+        "duration_min": 1e-09,
+        "duration_zero_fraction": 0.78,
+        "duration_epsilon": 1e-09,
+        "packet_count_model": "poisson",
+        "packets_poisson_lambda": 22.0,
+        "duration_components": [
+          {
+            "weight": 0.023308036073727445,
+            "mean_log10": -5.595804771856017,
+            "std_log10": 1.5259710619239581
+          },
+          {
+            "weight": 0.2971721912375606,
+            "mean_log10": -2.970783896656643,
+            "std_log10": 0.545072007729719
+          },
+          {
+            "weight": 0.5041310536195703,
+            "mean_log10": -1.4759968175266154,
+            "std_log10": 0.4739230327698194
+          },
+          {
+            "weight": 0.1753887190691416,
+            "mean_log10": -0.2953236022311838,
+            "std_log10": 0.901395032415761
+          }
+        ],
+        "packets_std": 2020,
+        "packets_min": 808
+      },
+      "gre": {
+        "flag_weight_4": 0.06485946203647615,
+        "flag_weight_8": 0.08253061894020872,
+        "flag_weight_12": 0.8526099190233151
+      },
+      "gre_flow": {
+        "enabled": true,
+        "flows_per_bot": 50,
+        "target_windows": 10000,
+        "single_packet_fraction": 0.783,
+        "unique_src_per_flow": true,
+        "packets_model": "poisson",
+        "packets_poisson_lambda": 22.0,
+        "aggregation_packets": 20,
+        "plateau_packets": 20,
+        "window_gap": 0.002,
+        "tail_single_packet_boost": 0.18,
+        "packets_mean_long": 50,
+        "packets_std_long": 15,
+        "packets_min_long": 2,
+        "packets_max_long": 180,
+        "src_base": "10.46.0.",
+        "src_first_octet": 20,
+        "dst_base": "10.47.0.",
+        "dst_first_octet": 1,
+        "pcap_intra_iat_mode": "uniform",
+        "pcap_intra_iat_low_sec": 0.0005,
+        "pcap_intra_iat_high_sec": 0.004,
+        "inter_window_gap_sec": 0.002
+      },
+      "iat": {
+        "model": "onoff",
+        "on_rate_pps": 48.0,
+        "jitter": 0.22,
+        "p_off": 0.035,
+        "ar1_rho": 0.1
+      },
+      "botnet": {
+        "size": 22
+      }
+    },
+    "greeth": {
+      "_comment": "Mirai GRE-ETH. v6-M2: Min v6-M + spread moderado (Cov/greip_trap); extrator inalterado.",
+      "capture_overhead": 43,
+      "size": {
+        "model": "hybrid_window_hetero",
+        "target_feature": "Min",
+        "floor_model": "empirical_quantile",
+        "floor_jitter_std": 0.0,
+        "floor_quantile_lo": 0.34,
+        "floor_quantile_hi": 0.9,
+        "floor_clip_min": 532,
+        "floor_clip_max": 592,
+        "min": 42,
+        "max": 2200,
+        "plateau_min_packets": 20,
+        "sigma": 0.05432752727284344,
+        "small_fraction": 0.041441155293291454,
+        "small_mu": 4.148956580438763,
+        "small_sigma": 0.28226067007561245,
+        "jitter_std": 0.32,
+        "noisy_fraction": 0.055640754941770815,
+        "mu": 6.402094049605575,
+        "components": [
+          {
+            "weight": 0.458,
+            "kind": "constant",
+            "value": 592
+          },
+          {
+            "weight": 0.489,
+            "kind": "normal",
+            "mean": 517,
+            "std": 47
+          },
+          {
+            "weight": 0.053,
+            "kind": "lognormal",
+            "mean_log": 5.786,
+            "std_log": 0.473
+          }
+        ],
+        "quantiles_empirical_min": [
+          [
+            0.0,
+            46.16
+          ],
+          [
+            0.1,
+            457.44
+          ],
+          [
+            0.2,
+            497.62
+          ],
+          [
+            0.3,
+            522.84
+          ],
+          [
+            0.4,
+            548.62
+          ],
+          [
+            0.5,
+            576.04
+          ],
+          [
+            0.6,
+            592.0
+          ],
+          [
+            0.7,
+            592.0
+          ],
+          [
+            0.8,
+            592.0
+          ],
+          [
+            0.9,
+            592.0
+          ],
+          [
+            1.0,
+            1457.72
+          ]
+        ]
+      },
+      "dynamic_streams": {
+        "enabled": true,
+        "block_size": 20,
+        "size_std": 58.0,
+        "size_correlation": 0.4,
+        "window_hetero": {
+          "pcap_intra_iat_mode": "uniform",
+          "pcap_intra_iat_low_sec": 0.008,
+          "pcap_intra_iat_high_sec": 0.018,
+          "pcap_intra_iat_sec": 0.013,
+          "pcap_iat_cap_burst": false,
+          "inter_window_gap_sec": 0.04,
+          "inter_window_gap_cap_burst": false,
+          "flow_duration_include_inter_gap": false,
+          "min_trace": false,
+          "min_trace_samples": 12,
+          "size_std": 58.0,
+          "tot_sum_profile": "markov_gmm",
+          "intra_spread": {
+            "_comment": "auto_calibrate_greeth_loss: spread/markov optimizado offline (Wasserstein + IDS)",
+            "enabled": true,
+            "shuffle_packets": true,
+            "jitter_std": 37.35059423368467,
+            "spike_prob": 0.05953969625279606,
+            "spike_delta": 91.31207115226731,
+            "tier_switch_prob": 0.45,
+            "tier_jitter": 22.0,
+            "tiers": [
+              0,
+              40,
+              85,
+              145
+            ],
+            "tier_weights": [
+              0.28,
+              0.34,
+              0.26,
+              0.12
+            ],
+            "mid_floor_delta_scale": 1.2719254456094762,
+            "low_floor_delta_scale": 0.72,
+            "role_deltas": {
+              "plateau": [
+                0,
+                38
+              ],
+              "normal": [
+                71,
+                151
+              ],
+              "tail": [
+                107,
+                196
+              ]
+            }
+          },
+          "markov_gmm": {
+            "_comment_states": "v6-L: multimodal intra-janela; emit_mode delta_above_floor",
+            "emit_mode": "delta_above_floor",
+            "state_labels": [
+              "592",
+              "500",
+              "tail"
+            ],
+            "plateau_prob": 0.35,
+            "normal_prob": 0.58,
+            "tail_prob": 0.07000000000000006,
+            "plateau_emit_std_log": 0.055,
+            "normal_emit_std_mult": 1.45,
+            "tail_emit_std_mult": 1.35,
+            "tail_stay_prob": 0.22,
+            "tail_scale": 1.05,
+            "stay_prob": 0.38,
+            "asymmetric": true,
+            "transition": [
+              [
+                0.3,
+                0.4,
+                0.3
+              ],
+              [
+                0.26,
+                0.36,
+                0.38
+              ],
+              [
+                0.2,
+                0.44,
+                0.36
+              ]
+            ],
+            "stay_probs": [
+              0.3,
+              0.36,
+              0.36
+            ],
+            "ar1_rho": 0.08,
+            "spike_prob": 0.05953969625279606,
+            "spike_delta": 91.31207115226731,
+            "jitter_std": 33.6155348103162
+          },
+          "burst_model": {
+            "enabled": true,
+            "probability": 0.03,
+            "packets_per_burst": 2,
+            "burst_mean": 628,
+            "burst_std": 18
+          },
+          "cov_regulation": {
+            "_comment": "v6-M2: greip reforçado (prod greip_trap); sem soft cap agressivo",
+            "enabled": true,
+            "variance_agg_mode": "std_over_min_sq",
+            "var_model_enabled": false,
+            "cov_lo": 100.0,
+            "cov_target_lo": 500.0,
+            "cov_target_hi": 1100.0,
+            "cov_hi": 2200.0,
+            "greip_cov_threshold": 2400.0,
+            "cov_extreme": 99999.0,
+            "var_target_lo": 0.012,
+            "var_target_hi": 0.12,
+            "plateau_floor_min": 590,
+            "low_floor_max": 560,
+            "plateau_jitter_std": 22.0,
+            "plateau_spike_scale": 0.35,
+            "plateau_spike_delta_cap": 42.0,
+            "low_floor_jitter_scale": 0.32,
+            "low_floor_spike_scale": 0.15,
+            "low_floor_spike_delta_scale": 0.25,
+            "mid_floor_jitter_scale": 0.55,
+            "mid_floor_spike_scale": 0.3,
+            "mid_floor_spike_delta_scale": 0.45,
+            "plateau_boost_std": 42.0,
+            "plateau_boost_floor_frac": 0.08,
+            "low_floor_boost_std": 24.0,
+            "low_floor_boost_floor_frac": 0.14,
+            "mid_boost_std": 32.0,
+            "mid_boost_floor_frac": 0.1,
+            "compress_factor": 0.55,
+            "cov_soft_compress_factor": 0.86,
+            "low_floor_compress_factor": 0.38,
+            "var_compress_factor": 0.65,
+            "plateau_burst_scale": 0.4,
+            "low_floor_burst_scale": 0.2,
+            "low_floor_burst_mean_cap": 620.0,
+            "plateau_burst_mean_delta_cap": 48.0,
+            "max_iterations": 20
+          },
+          "var_model_regulation": {
+            "_comment": "v6-K desactivado: Variance sobe via heterogeneidade Tot size (v6-L)",
+            "enabled": false,
+            "var_lo": 0.025,
+            "var_hi": 0.1,
+            "var_target": 0.04,
+            "cov_cap": 2000.0,
+            "plateau_signed_std": 72.0,
+            "mid_signed_std": 58.0,
+            "low_floor_signed_std": 48.0,
+            "floor_frac": 0.04,
+            "compress_factor": 0.68,
+            "cov_compress_factor": 0.68,
+            "max_iterations": 16
+          },
+          "long_flow_fraction": 0.022571877513572067,
+          "long_flow_reset_after_packets": 318,
+          "long_flow_reset_prob": 1.0,
+          "operational_modes": {
+            "_comment": "HMM 6 estados: ativar substitui calibracao separada duration+Markov. Defaults em synth_generator._default_operational_modes_greeth.",
+            "enabled": false,
+            "initial_mode": "plateau"
+          }
+        }
+      },
+      "flow": {
+        "duration_model": "zero_inflated_gmm_log10",
+        "duration_min": 1e-09,
+        "duration_zero_fraction": 0.20407919936449234,
+        "duration_epsilon": 1e-09,
+        "duration_components": [
+          {
+            "weight": 0.7422058202916766,
+            "mean_log10": -5.767650755005285,
+            "std_log10": 1.5477548441222857
+          },
+          {
+            "weight": 0.20050925852925172,
+            "mean_log10": -2.9246759950380232,
+            "std_log10": 0.46665284769526116
+          },
+          {
+            "weight": 0.10081573760110972,
+            "mean_log10": -1.6327910325926704,
+            "std_log10": 0.3797547646379061
+          },
+          {
+            "weight": 0.474399734474877,
+            "mean_log10": -0.6815702218669848,
+            "std_log10": 0.4
+          }
+        ],
+        "packets_std": 2860,
+        "packets_min": 1144,
+        "packets_mean": 11441
+      },
+      "gre": {
+        "flag_weight_4": 0.21621907993448233,
+        "flag_weight_8": 0.05,
+        "flag_weight_12": 0.7337809200655177
+      },
+      "gre_flow": {
+        "enabled": true,
+        "flows_per_bot": 17,
+        "aggregation_packets": 20,
+        "pcap_intra_iat_mode": "uniform",
+        "pcap_intra_iat_low_sec": 0.008,
+        "pcap_intra_iat_high_sec": 0.018,
+        "pcap_intra_iat_sec": 0.013,
+        "pcap_iat_cap_burst": false,
+        "inter_window_gap_sec": 0.04,
+        "inter_window_gap_cap_burst": false,
+        "single_packet_fraction": 0.5788020058917563,
+        "unique_src_per_flow": true,
+        "packets_mean_long": 8,
+        "packets_std_long": 8,
+        "packets_min_long": 2,
+        "src_base": "10.48.0.",
+        "src_first_octet": 20,
+        "dst_base": "10.49.0.",
+        "dst_first_octet": 1
+      },
+      "iat": {
+        "model": "onoff",
+        "on_rate_pps": 48.0,
+        "jitter": 0.22,
+        "p_off": 0.035,
+        "ar1_rho": 0.1
+      },
+      "botnet": {
+        "size": 22
+      }
+    }
+  },
+  "_auto_calibration": {
+    "variant": "greip",
+    "label": "Mirai-greip_flood",
+    "phase": "shap_min_fd_v2",
+    "_comment": "Derivado de params_auto_greeth_v2.json; foco Min (SHAP); Cov/Var secundarios",
+    "greip_min_target": {
+      "med": 546.8,
+      "p25": 483.7,
+      "p75": 578.0
+    },
+    "floor_quantile_lo": 0.13,
+    "sim_min_check": {
+      "med": 547.0,
+      "p25": 499.0,
+      "p75": 572.0,
+      "at578": 0.18466666666666667,
+      "ge580": 0.0,
+      "lt480": 0.15033333333333335
+    },
+    "shap_weights": {
+      "Min": 1.09,
+      "flow_duration": 1.0
+    },
+    "cic_targets": {
+      "Min": {
+        "med": 546.8,
+        "p25": 483.7,
+        "p75": 578.0
+      },
+      "flow_duration": {
+        "med": 0.0,
+        "p75": 0.0033110785484313,
+        "p90": 0.06184949016571044,
+        "zero_frac": 0.6527591145147618
+      }
+    },
+    "best_patch": {
+      "floor_quantile_lo": 0.10860174939725974,
+      "duration_zero_fraction": 0.78,
+      "pcap_iat_scale": 0.5,
+      "inter_window_gap_sec": 0.02
+    }
+  }
+}
