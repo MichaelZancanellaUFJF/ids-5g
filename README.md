@@ -1,4 +1,4 @@
-# 🛡️ Framework para Emulação de Botnets IoT e Calibração Baseada em XAI em Redes 5G
+#  Framework para Emulação de Botnets IoT e Calibração Baseada em XAI em Redes 5G
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![Open5GS](https://img.shields.io/badge/5G_Core-Open5GS-brightgreen.svg)
@@ -7,7 +7,7 @@
 ![SHAP](https://img.shields.io/badge/XAI-SHAP-red.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-## 📖 Sobre o Projeto
+##  Sobre o Projeto
 
 Este repositório contém um framework completo para **emulação, calibração e injeção de tráfego sintético de botnets IoT em redes 5G**, desenvolvido no contexto de pesquisas sobre Sistemas de Detecção de Intrusão (IDS) para ambientes **5G Core**.
 
@@ -17,9 +17,9 @@ Ao invés de simplesmente reproduzir arquivos PCAP, o framework gera tráfego si
 
 ---
 
-# 🔬 Principais Contribuições
+#  Principais Contribuições
 
-## ✔ Geração Estocástica de Tráfego
+##  Geração Estocástica de Tráfego
 
 O gerador modela o comportamento temporal e estatístico das botnets utilizando:
 
@@ -32,7 +32,7 @@ Essa abordagem produz fluxos muito mais realistas do que simples replays de PCAP
 
 ---
 
-## ✔ Calibração Orientada por Explainable AI (XAI)
+##  Calibração Orientada por Explainable AI (XAI)
 
 O framework utiliza um modelo IDS baseado em **LightGBM** para obter as importâncias das features através dos valores **SHAP (|φ|)**.
 
@@ -46,7 +46,7 @@ entre os dados reais e os dados sintéticos.
 
 ---
 
-## ✔ Injeção em Ambiente 5G Real
+##  Injeção em Ambiente 5G Real
 
 Após calibrado, o tráfego é injetado diretamente na interface:
 
@@ -66,7 +66,7 @@ evitando agrupamentos artificiais provocados pelo escalonador do sistema operaci
 
 ---
 
-# 🏗 Arquitetura do Projeto
+# Arquitetura do Projeto
 
 ```
 ids-5g/
@@ -242,7 +242,7 @@ permitindo verificar a fidelidade entre os dados reais e sintéticos.
 
 ---
 
-# 📊 Fluxo Geral do Framework
+# Fluxo Geral do Framework
 
 ```
                CICIoT2023
@@ -280,13 +280,13 @@ permitindo verificar a fidelidade entre os dados reais e sintéticos.
 
 ---
 
-# 📄 Licença
+# Licença
 
 Este projeto foi desenvolvido para fins de pesquisa acadêmica em Sistemas de Detecção de Intrusão para Redes 5G e pode ser utilizado como base para estudos e experimentos científicos.
 
 ---
 
-## 👨‍💻 Autor
+##  Autor
 
 **Michael Zancanella Barboza**
 
