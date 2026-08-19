@@ -32,13 +32,13 @@ Essa abordagem produz fluxos muito mais realistas do que simples replays de PCAP
 
 ---
 
-##  Calibração Orientada por Explainable AI (XAI)
+## Calibração Orientada por Explainable AI (XAI)
 
-O framework utiliza um modelo IDS baseado em **LightGBM** para obter as importâncias das features através dos valores **SHAP (|φ|)**.
+O framework utiliza um modelo IDS baseado em **LightGBM** para extrair a importância espacial e temporal das features através dos valores **SHAP (|φ|)**.
 
-Durante a calibração, apenas as variáveis realmente relevantes para o classificador são ajustadas.
+Ao invés de calibrar as variáveis de forma cega, o otimizador utiliza os pesos SHAP como um **mecanismo de atenção**. A função de custo minimiza a **Distância de Wasserstein (W₁)** global entre os dados reais e os dados sintéticos, ponderada pela importância de cada variável.
 
-A otimização minimiza iterativamente a **Distância de Wasserstein (W₁)** entre os dados reais e os dados sintéticos.
+Isso garante que o otimizador priorize o alinhamento das assinaturas físicas mais críticas da ameaça, mas mantenha uma aderência distribucional holística em todas as features, recriando o "envelope físico" do tráfego original sem causar overfitting heurístico no gerador.
 
 ---
 
