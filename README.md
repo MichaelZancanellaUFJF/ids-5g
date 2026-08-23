@@ -62,18 +62,18 @@ evitando agrupamentos artificiais provocados pelo escalonador do sistema operaci
 ids-5g/
 │
 ├── data/
-│   ├── Dataset CICIoT2023
-│   ├── Capturas PCAP
+│   ├── Dataset CICIoT2023 ** NÃO É POSSIVEL REALIZAR O UPLOAD TAMANHO DE 900 MB **
+│   ├── Capturas PCAP ** AMBIENTE SINTÉTICO 5G
 │   └── CSVs extraídos
 │
 ├── notebooks/
 │   ├── Análises exploratórias
 │   ├── Validação visual
 │   └── SHAP Analysis
-│
-├── pipelines/
-│   ├── Scripts PowerShell
-│   └── ETL PCAP → CSV
+│   └── Arquivos .pkl dos modelos treinados
+├── pcap2csv/
+│   ├── Arquivos padrões para extração das features, disponibilizado pelo CICIOT2023.
+
 │
 ├── requirements.txt
 │
